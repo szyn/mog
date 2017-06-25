@@ -1,0 +1,50 @@
+{
+    "workflows": [
+        {
+            "id": "18",
+            "name": "test",
+            "project": {
+                "id": "1",
+                "name": "test"
+            },
+            "revision": "499ab0cf-67ca-4594-99f1-1f3834a643f7",
+            "timezone": "UTC",
+            "config": {
+                "_export": {
+                    "rb": {
+                        "require": "scripts/myclass"
+                    }
+                },
+                "+setup": {
+                    "rb>": "MyClass.print_time",
+                    "label": "start",
+                    "time": "${session_time}"
+                },
+                "+repeat": {
+                    "for_each>": {
+                        "order": [
+                            "first",
+                            "second",
+                            "third"
+                        ],
+                        "animal": [
+                            "dog",
+                            "cat"
+                        ]
+                    },
+                    "_do": {
+                        "rb>": "MyClass.say_something",
+                        "order": "${order}",
+                        "animal": "${animal}"
+                    },
+                    "_parallel": true
+                },
+                "+teardown": {
+                    "rb>": "MyClass.print_time",
+                    "label": "finish",
+                    "time": "${session_time}"
+                }
+            }
+        }
+    ]
+}

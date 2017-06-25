@@ -1,0 +1,100 @@
+#!/bin/bash
+
+# To run this script execute:
+#   `curl https://raw.githubusercontent.com/szyn/mog/master/_tool/get | sh`
+
+PROJECT_NAME="mog"
+LBIN="/usr/local/bin"
+export PATH=$PATH:$LBIN
+
+initArch() {
+	ARCH=$(uname -m)
+	case $ARCH in
+		armv5*) ARCH="armv5";;
+		armv6*) ARCH="armv6";;
+		armv7*) ARCH="armv7";;
+		aarch64) ARCH="arm64";;
+		x86) ARCH="386";;
+		x86_64) ARCH="amd64";;
+		i686) ARCH="386";;
+		i386) ARCH="386";;
+	esac
+}
+
+initOS() {
+	OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
+
+	case "$OS" in
+		# Minimalist GNU for Windows
+		mingw*) OS='windows';;
+	esac
+}
+
+downloadFile() {
+	if type "curl" > /dev/null; then
+		TAG=$(curl -s  https://raw.githubusercontent.com/szyn/mog/master/master/_tool/version)
+	elif type "wget" > /dev/null; then
+		TAG=$(wget -q -O -  https://raw.githubusercontent.com/szyn/mog/master/master/_tool/version)
+	fi
+	LATEST_RELEASE_URL="https://api.github.com/repos/szyn/$PROJECT_NAME/releases/tags/$TAG"
+	if type "curl" > /dev/null; then
+		LATEST_RELEASE_JSON=$(curl -s "$LATEST_RELEASE_URL")
+	elif type "wget" > /dev/null; then
+		LATEST_RELEASE_JSON=$(wget -q -O - "$LATEST_RELEASE_URL")
+	fi
+	MOG_DIST="mog_${OS}_${ARCH}"
+	# || true forces this command to not catch error if grep does not find anything
+	DOWNLOAD_URL=$(echo "$LATEST_RELEASE_JSON" | grep 'browser_' | cut -d\" -f4 | grep "$MOG_DIST") || true
+	if [ -z "$DOWNLOAD_URL" ]; then
+        echo "Sorry, we dont have a dist for your system: $OS $ARCH"
+        echo "You can ask one here: https://github.com/szyn/$PROJECT_NAME/issues"
+        exit 1
+	else
+		MOG_TMP_FILE="/tmp/$MOG_DIST"
+        echo "Downloading $DOWNLOAD_URL"
+		if type "curl" > /dev/null; then
+			curl -L "$DOWNLOAD_URL" -o "$MOG_TMP_FILE"
+		elif type "wget" > /dev/null; then
+			wget -q -O "$MOG_TMP_FILE" "$DOWNLOAD_URL"
+		fi
+	fi
+}
+
+installFile() {
+	MOG_TMP_BIN="/tmp/$PROJECT_NAME"
+	mv "$MOG_TMP_FILE" "$MOG_TMP_BIN" && \
+	chmod 755 "$MOG_TMP_BIN" && \
+	cp -f "$MOG_TMP_BIN" "$LBIN" && \
+	rm "$MOG_TMP_BIN"
+}
+
+bye() {
+	result=$?
+	if [ "$result" != "0" ]; then
+		echo "Fail to install $PROJECT_NAME"
+	fi
+	exit $result
+}
+
+testVersion() {
+	set +e
+	MOG="$(which $PROJECT_NAME)"
+	if [ "$?" = "1" ]; then
+		echo "$PROJECT_NAME not found. Did you add "'$LBIN'" to your "'$PATH?'
+		exit 1
+	fi
+	set -e
+	MOG_VERSION=$($PROJECT_NAME -v)
+	echo "$MOG_VERSION installed successfully"
+}
+
+# Execution
+
+# Stop execution on any error
+trap "bye" EXIT
+set -e
+initArch
+initOS
+downloadFile
+installFile
+testVersion

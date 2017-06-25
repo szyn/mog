@@ -1,0 +1,314 @@
+{
+    "tasks": [
+        {
+            "id": "133",
+            "fullName": "+test",
+            "parentId": null,
+            "config": {
+                "_export": {
+                    "rb": {
+                        "require": "scripts/myclass"
+                    }
+                }
+            },
+            "upstreams": [],
+            "state": "group_error",
+            "exportParams": {
+                "rb": {
+                    "require": "scripts/myclass"
+                }
+            },
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:31Z",
+            "retryAt": null,
+            "startedAt": null,
+            "isGroup": true
+        },
+        {
+            "id": "134",
+            "fullName": "+test+setup",
+            "parentId": "133",
+            "config": {
+                "rb>": "MyClass.print_time",
+                "label": "start",
+                "time": "${session_time}"
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {},
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:27Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:26Z",
+            "isGroup": false
+        },
+        {
+            "id": "135",
+            "fullName": "+test+repeat",
+            "parentId": "133",
+            "config": {
+                "for_each>": {
+                    "order": [
+                        "first",
+                        "second",
+                        "third"
+                    ],
+                    "animal": [
+                        "dog",
+                        "cat"
+                    ]
+                },
+                "_do": {
+                    "rb>": "MyClass.say_something",
+                    "order": "${order}",
+                    "animal": "${animal}"
+                },
+                "_parallel": true
+            },
+            "upstreams": [
+                "134"
+            ],
+            "state": "success",
+            "exportParams": {},
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:27Z",
+            "isGroup": false
+        },
+        {
+            "id": "136",
+            "fullName": "+test+teardown",
+            "parentId": "133",
+            "config": {
+                "rb>": "MyClass.print_time",
+                "label": "finish",
+                "time": "${session_time}"
+            },
+            "upstreams": [
+                "135"
+            ],
+            "state": "success",
+            "exportParams": {},
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:30Z",
+            "isGroup": false
+        },
+        {
+            "id": "137",
+            "fullName": "+test+failed",
+            "parentId": "133",
+            "config": {
+                "sh>": "exit 1"
+            },
+            "upstreams": [
+                "136"
+            ],
+            "state": "error",
+            "exportParams": {},
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:31Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:30Z",
+            "isGroup": false
+        },
+        {
+            "id": "138",
+            "fullName": "+test+repeat^sub",
+            "parentId": "135",
+            "config": {
+                "_parallel": true
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {},
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": null,
+            "isGroup": true
+        },
+        {
+            "id": "139",
+            "fullName": "+test+repeat^sub+for-0=order=0=first&1=animal=0=dog",
+            "parentId": "138",
+            "config": {
+                "rb>": "MyClass.say_something",
+                "order": "${order}",
+                "animal": "${animal}",
+                "_export": {
+                    "order": "first",
+                    "animal": "dog"
+                }
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {
+                "order": "first",
+                "animal": "dog"
+            },
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:28Z",
+            "isGroup": false
+        },
+        {
+            "id": "140",
+            "fullName": "+test+repeat^sub+for-0=order=0=first&1=animal=1=cat",
+            "parentId": "138",
+            "config": {
+                "rb>": "MyClass.say_something",
+                "order": "${order}",
+                "animal": "${animal}",
+                "_export": {
+                    "order": "first",
+                    "animal": "cat"
+                }
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {
+                "order": "first",
+                "animal": "cat"
+            },
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:28Z",
+            "isGroup": false
+        },
+        {
+            "id": "141",
+            "fullName": "+test+repeat^sub+for-0=order=1=second&1=animal=0=dog",
+            "parentId": "138",
+            "config": {
+                "rb>": "MyClass.say_something",
+                "order": "${order}",
+                "animal": "${animal}",
+                "_export": {
+                    "order": "second",
+                    "animal": "dog"
+                }
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {
+                "order": "second",
+                "animal": "dog"
+            },
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:28Z",
+            "isGroup": false
+        },
+        {
+            "id": "142",
+            "fullName": "+test+repeat^sub+for-0=order=1=second&1=animal=1=cat",
+            "parentId": "138",
+            "config": {
+                "rb>": "MyClass.say_something",
+                "order": "${order}",
+                "animal": "${animal}",
+                "_export": {
+                    "order": "second",
+                    "animal": "cat"
+                }
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {
+                "order": "second",
+                "animal": "cat"
+            },
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:28Z",
+            "isGroup": false
+        },
+        {
+            "id": "143",
+            "fullName": "+test+repeat^sub+for-0=order=2=third&1=animal=0=dog",
+            "parentId": "138",
+            "config": {
+                "rb>": "MyClass.say_something",
+                "order": "${order}",
+                "animal": "${animal}",
+                "_export": {
+                    "order": "third",
+                    "animal": "dog"
+                }
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {
+                "order": "third",
+                "animal": "dog"
+            },
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:28Z",
+            "isGroup": false
+        },
+        {
+            "id": "144",
+            "fullName": "+test+repeat^sub+for-0=order=2=third&1=animal=1=cat",
+            "parentId": "138",
+            "config": {
+                "rb>": "MyClass.say_something",
+                "order": "${order}",
+                "animal": "${animal}",
+                "_export": {
+                    "order": "third",
+                    "animal": "cat"
+                }
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {
+                "order": "third",
+                "animal": "cat"
+            },
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:30Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:28Z",
+            "isGroup": false
+        },
+        {
+            "id": "145",
+            "fullName": "+test^failure-alert",
+            "parentId": "133",
+            "config": {
+                "_type": "notify",
+                "_command": "Workflow session attempt failed"
+            },
+            "upstreams": [],
+            "state": "success",
+            "exportParams": {},
+            "storeParams": {},
+            "stateParams": {},
+            "updatedAt": "2017-06-24T06:45:31Z",
+            "retryAt": null,
+            "startedAt": "2017-06-24T06:45:31Z",
+            "isGroup": false
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+hash: 1802526b4870fa1d3a42ca4cafb852ed07d1c59fbae95d2cead8a2bc07c1aaca
+updated: 2017-06-25T15:12:45.669023458+09:00
+imports:
+- name: github.com/franela/goreq
+  version: b5b0f5eb2d16f20345cce0a544a75163579c0b00
+- name: github.com/rendon/testcli
+  version: 6283090d169f51a2410b4e260341a01c9a4c0ca7
+- name: github.com/satori/go.uuid
+  version: 879c5887cd475cd7864858769793b2ceb0d44feb
+- name: github.com/Sirupsen/logrus
+  version: ba1b36c82c5e05c4f912a88eab0dcd91a171688f
+- name: github.com/urfave/cli
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
+- name: golang.org/x/sys
+  version: 9ccfe848b9db8435a24c424abbc07a921adf1df5
+  subpackages:
+  - unix
+testImports: []

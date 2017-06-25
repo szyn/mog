@@ -1,0 +1,22 @@
+{
+    "id": "27",
+    "index": 1,
+    "project": {
+        "id": "1",
+        "name": "test"
+    },
+    "workflow": {
+        "name": "test",
+        "id": "2"
+    },
+    "sessionId": "9",
+    "sessionUuid": "15624750-5c1f-45d2-b668-c4f86e757484",
+    "done": false,
+    "success": false,
+    "cancelRequested": false,
+    "createdAt": "2017-06-24T06:45:26Z",
+    "finishedAt": "",
+    "workflowId": "2",
+    "sessionTime": "2017-06-24T00:00:00+00:00",
+    "params": {}
+}
