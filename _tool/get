@@ -32,9 +32,9 @@ initOS() {
 
 downloadFile() {
 	if type "curl" > /dev/null; then
-		TAG=$(curl -s  https://raw.githubusercontent.com/szyn/mog/master/master/_tool/version)
+		TAG=$(curl -s  https://raw.githubusercontent.com/szyn/mog/master/_tool/version)
 	elif type "wget" > /dev/null; then
-		TAG=$(wget -q -O -  https://raw.githubusercontent.com/szyn/mog/master/master/_tool/version)
+		TAG=$(wget -q -O -  https://raw.githubusercontent.com/szyn/mog/master/_tool/version)
 	fi
 	LATEST_RELEASE_URL="https://api.github.com/repos/szyn/$PROJECT_NAME/releases/tags/$TAG"
 	if type "curl" > /dev/null; then
