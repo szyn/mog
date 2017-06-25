@@ -1,8 +1,8 @@
 mog
 ---
 [![Circle CI](https://circleci.com/gh/szyn/mog.png?circle-token=25899711f108224a2801d68fbbb06e936057ac41)](https://circleci.com/gh/szyn/mog)
-[![Language](https://img.shields.io/badge/language-go-brightgreen.svg?style=flat-square)](https://golang.org/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
+[![Language](https://img.shields.io/badge/language-go-brightgreen.svg)](https://golang.org/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![GoDoc](https://godoc.org/github.com/szyn/mog?status.png)](https://godoc.org/github.com/szyn/mog)
 
 mog - A CLI Tool for Digdag.
@@ -18,8 +18,9 @@ $ curl https://raw.githubusercontent.com/szyn/mog/master/_tool/get | sh
 ```
 
 Note:  
-If using this script, downloading to `/usr/local/bin/mog`
-Can also get at https://github.com/szyn/mog/releases
+Get the latest release of mog.   
+The script puts it with Go binaries at `/usr/local/bin`.   
+Also you can get binaries at https://github.com/szyn/mog/releases
 
 # Usage
 
