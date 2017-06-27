@@ -31,7 +31,7 @@ Also you can get binaries at https://github.com/szyn/mog/releases
 `mog --help` show help.
 
 ```console
-$ ./mog --help
+$ mog --help
 NAME:
    mog - A CLI Tool for Digdag
 
