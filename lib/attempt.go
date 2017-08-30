@@ -109,8 +109,7 @@ func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
 	}
 
 	// c.SessionTime to date like this
-	date := c.SessionTime[0:13]
-
+	date := c.SessionTime[0:19]
 	for k := range attempts {
 		sessionTime := attempts[k].SessionTime
 
