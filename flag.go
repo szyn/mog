@@ -44,7 +44,7 @@ var pollingFlag = []cli.Flag{
 var retryFlag = []cli.Flag{
 	cli.BoolTFlag{
 		Name:  "retry, r",
-		Usage: "rerry attempts",
+		Usage: "retry attempts",
 	},
 }
 
