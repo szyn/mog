@@ -19,7 +19,6 @@ var Commands = []cli.Command{
 	commandStart,
 	commandRetry,
 	commandPollingStatus,
-	commandLog,
 }
 
 var commandStatus = cli.Command{
@@ -68,14 +67,6 @@ var commandRetry = cli.Command{
 	Usage:   "Retry a session",
 	Flags:   retryAttemptFlag,
 	Action:  newAttempt,
-}
-
-var commandLog = cli.Command{
-	Name:    "log",
-	Aliases: []string{"l"},
-	Usage:   "show logs of a session",
-	Flags:   commonFlag,
-	Action:  showLogs,
 }
 
 // NewClientFromContext
@@ -182,31 +173,6 @@ func newAttempt(c *cli.Context) error {
 
 	// Print JSON Response
 	fmt.Println(prettyPrintJSON(result))
-
-	return nil
-}
-
-func showLogs(c *cli.Context) error {
-	client := newClientFromContext(c)
-
-	task := c.Args().Get(0)
-	if task == "" {
-		logger.DieIf(errors.New("<taskName> is requied"))
-	}
-	logger.Log("task: " + task)
-
-	attemptID, err := client.GetLatestAttemptID()
-	logger.DieIf(err)
-
-	logfile, err := client.GetLogFileResult(attemptID, task)
-	logger.DieIf(err)
-
-	if logfile == nil {
-		logger.DieIf(errors.New("result not found"))
-	}
-
-	logtext, err := client.GetLogText(attemptID, logfile.FileName)
-	fmt.Println(logtext)
 
 	return nil
 }
