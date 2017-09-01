@@ -106,20 +106,3 @@ func (c *Client) doReq(method, spath string, params, res interface{}) error {
 
 	return req.Body.FromJsonTo(&res)
 }
-
-func (c *Client) doReqRaw(method, spath string, params interface{}) (string, error) {
-	u := *c.URL
-	u.Path = path.Join(c.URL.Path, spath)
-
-	req, err := goreq.Request{
-		Method:      method,
-		Uri:         u.String(),
-		QueryString: params,
-		UserAgent:   userAgent,
-	}.Do()
-	if err != nil {
-		return "", err
-	}
-	body, err := req.Body.ToString()
-	return body, err
-}
