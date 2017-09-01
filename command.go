@@ -73,7 +73,7 @@ var commandRetry = cli.Command{
 var commandLog = cli.Command{
 	Name:    "log",
 	Aliases: []string{"l"},
-	Usage:   "show logs of a session",
+	Usage:   "Show logs of a session",
 	Flags:   commonFlag,
 	Action:  showLogs,
 }
