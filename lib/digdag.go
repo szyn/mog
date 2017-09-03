@@ -107,7 +107,7 @@ func (c *Client) doReq(method, spath string, params, res interface{}) error {
 	return req.Body.FromJsonTo(&res)
 }
 
-func (c *Client) doReqRaw(method, spath string, params interface{}) (string, error) {
+func (c *Client) doRawReq(method, spath string, params interface{}) (string, error) {
 	u := *c.URL
 	u.Path = path.Join(c.URL.Path, spath)
 

@@ -204,7 +204,7 @@ func (c *Client) GetLogFileResult(attemptID, taskName string) (*LogFile, error) 
 func (c *Client) GetLogText(attemptID string, fileName string) (string, error) {
 	spath := "/api/logs/" + attemptID + "/files/" + fileName
 
-	gztext, err := c.doReqRaw(http.MethodGet, spath, nil)
+	gztext, err := c.doRawReq(http.MethodGet, spath, nil)
 	if err != nil {
 		return "", err
 	}
