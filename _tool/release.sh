@@ -77,7 +77,7 @@ release()
 
     git tag ${TAG_NAME}
     # generate CHANGELOG.md
-    github-changes -o szyn -r mog --only-pulls
+    github-changes -o szyn -r mog --only-pulls -n ${TAG_NAME}
     git add .
     git commit -m "Bump version to ${TAG_NAME}"
 }
