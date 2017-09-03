@@ -73,7 +73,7 @@ release()
 {
     # Replace version
     echo ${TAG_NAME} > ${SCRIPT_DIR}/version
-    sed -i -e "s/${REGEX}/${TAG_NAME}/g" ${SCRIPT_DIR}/../mog.go
+    sed -i '' -e "s/${REGEX}/${TAG_NAME}/g" ${SCRIPT_DIR}/../mog.go
 
     git tag ${TAG_NAME}
     # generate CHANGELOG.md
