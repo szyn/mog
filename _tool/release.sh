@@ -71,15 +71,21 @@ yes_or_no()
 
 release()
 {
+    BRANCH_NAME="bump-version-${TAG_NAME//./_}"
+    git checkout -b ${BRANCH_NAME}
+
     # Replace version
     echo ${TAG_NAME} > ${SCRIPT_DIR}/version
     sed -i '' -e "s/${REGEX}/${TAG_NAME}/g" ${SCRIPT_DIR}/../mog.go
 
-    git tag ${TAG_NAME}
     # generate CHANGELOG.md
     github-changes -o szyn -r mog --only-pulls -n ${TAG_NAME}
+    git add ${SCRIPT_DIR}/../CHANGELOG.md
+    git commit -m "Update CHANGELOG.md"
+    
     git add .
     git commit -m "Bump version to ${TAG_NAME}"
+    git tag -a ${TAG_NAME} -m "Bump version to ${TAG_NAME}"
 }
 
 begintrap
