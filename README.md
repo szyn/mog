@@ -1,6 +1,6 @@
 mog
 ---
-[![Release](http://github-release-version.herokuapp.com/github/szyn/mog/release.svg?style=flat-square)](https://github.com/szyn/mog/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/szyn/mog.svg?style=flat-square)](https://github.com/szyn/mog/releases/latest)
 [![Circle CI](https://img.shields.io/circleci/project/github/szyn/mog.svg?style=flat-square)](https://circleci.com/gh/szyn/mog)
 [![Language](https://img.shields.io/badge/language-go-brightgreen.svg?style=flat-square)](https://golang.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
