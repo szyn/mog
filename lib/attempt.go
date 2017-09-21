@@ -101,6 +101,9 @@ func (c *Client) GetAttempts() ([]Attempt, error) {
 // GetLatestAttemptID to get a latest attemptID from sessionDate
 func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
 	attempts, err := c.GetAttempts()
+	if err != nil {
+		return "", err
+	}
 
 	// If any attempts not found
 	if len(attempts) == 0 {
@@ -110,6 +113,7 @@ func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
 
 	// c.SessionTime to date like this
 	date := c.SessionTime[0:19]
+
 	for k := range attempts {
 		sessionTime := attempts[k].SessionTime
 
