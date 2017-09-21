@@ -3,12 +3,13 @@ package digdag
 import (
 	"errors"
 	"fmt"
-	"github.com/franela/goreq"
 	"net/http"
 	"net/url"
 	"path"
 	"regexp"
 	"runtime"
+
+	"github.com/franela/goreq"
 
 	"time"
 )
@@ -97,20 +98,30 @@ func (c *Client) doReq(method, spath string, params, res interface{}) error {
 	u := *c.URL
 	u.Path = path.Join(c.URL.Path, spath)
 
-	req, err := goreq.Request{
+	req := goreq.Request{
 		Method:      method,
 		Uri:         u.String(),
 		QueryString: params,
 		ContentType: "application/json",
 		UserAgent:   userAgent,
-		Body:        res,
 		// ShowDebug:   true,
-	}.Do()
+	}
+	if method == http.MethodPost || method == http.MethodPut {
+		req.Body = res
+	}
+	req.AddHeader("Accept-Encoding", "gzip")
+
+	resp, err := req.Do()
 	if err != nil {
 		return err
 	}
+	if resp.StatusCode >= 400 {
+		// TODO: add method for parse API error response
+		err := errors.New("bad request: " + resp.Status)
+		return err
+	}
 
-	return req.Body.FromJsonTo(&res)
+	return resp.Body.FromJsonTo(&res)
 }
 
 func (c *Client) doRawReq(method, spath string, params interface{}) (string, error) {
@@ -122,10 +133,18 @@ func (c *Client) doRawReq(method, spath string, params interface{}) (string, err
 		Uri:         u.String(),
 		QueryString: params,
 		UserAgent:   userAgent,
-	}.Do()
+	}.WithHeader("Accept-Encoding", "gzip").Do()
+
 	if err != nil {
 		return "", err
 	}
+
+	if req.StatusCode >= 400 {
+		// TODO: add method for parse API error response
+		err := errors.New("Bad request: " + req.Status)
+		return "", err
+	}
+
 	body, err := req.Body.ToString()
 	return body, err
 }
