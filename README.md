@@ -4,7 +4,7 @@ mog
 [![Circle CI](https://img.shields.io/circleci/project/github/szyn/mog.svg?style=flat-square)](https://circleci.com/gh/szyn/mog)
 [![Language](https://img.shields.io/badge/language-go-brightgreen.svg?style=flat-square)](https://golang.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
-[![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/szyn/mog)
+[![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/szyn/mog)
 
 mog - A CLI Tool for Digdag.
 
@@ -13,7 +13,7 @@ mog is a command-line interface tool for the Digdag.
 mog output format is JSON, so it can be filtered with a JSON processor such as jq.
 
 ## What's Digdag?
-Digdag is an open source Workload Automation System (http://www.digdag.io)
+Digdag is an open source Workload Automation System (https://www.digdag.io)
 
 # Installation
 
