@@ -5,7 +5,7 @@ import (
 	"net/url"
 )
 
-// projects is struct for recevied json
+// projects is struct for received json
 type projects struct {
 	Projects []Project `json:"projects"`
 }

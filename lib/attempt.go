@@ -39,7 +39,7 @@ type Attempt struct {
 	FinishedAt       string      `json:"finishedAt"`
 }
 
-// PutAttempt is struct for create a new attemp
+// PutAttempt is struct for create a new attempt
 type PutAttempt struct {
 	Attempt
 	WorkflowID       string                 `json:"workflowId"`
@@ -81,7 +81,7 @@ func NewPutAttempt(workflowID, sessionTime, retryAttemptName string) *PutAttempt
 	return pa
 }
 
-// GetAttempts get atemmpts reponse
+// GetAttempts get attempts response
 func (c *Client) GetAttempts() ([]Attempt, error) {
 	spath := "/api/attempts"
 
@@ -123,7 +123,7 @@ func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
 		}
 	}
 
-	// If any sesssionTime not found
+	// If any sessionTime not found
 	err = errors.New("input session " + date + " not found")
 	return attemptID, err
 }
@@ -183,7 +183,7 @@ func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt 
 		return nil, done, err
 	}
 
-	// If alredy attempt done
+	// If already attempt done
 	if pa.Attempt.Done == true {
 		return nil, true, err
 	}
