@@ -1,6 +1,6 @@
 # How to Contribute
 
-1. Fork it ( http://github.com/szyn/mog )
+1. Fork it ( https://github.com/szyn/mog )
 1. Create your feature branch (git checkout -b my-awesome-feature)
 1. Commit your changes (git commit -am 'Add awesome feature')
 1. Rebase your local changes against the master branch
