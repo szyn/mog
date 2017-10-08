@@ -19,7 +19,7 @@ type LogFile struct {
 	FileSize int         `json:"fileSize"`
 	TaskName string      `json:"taskName"`
 	FileTime string      `json:"fileTime"`
-	AgentId  string      `json:"agentId"`
+	AgentID  string      `json:"agentId"`
 	Direct   interface{} `json:"direct"`
 }
 
