@@ -171,14 +171,13 @@ func newAttempt(c *cli.Context) error {
 	logger.Log("retry: " + strconv.FormatBool(retry))
 
 	result, done, err := client.CreateNewAttempt(workflowID, client.SessionTime, retry)
-	logger.DieIf(err)
-
 	if done == true {
 		msg1 := "A session for the requested session_time already exists.\n"
 		msg2 := "`mog retry` to run the session again for the same session_time."
 		err := errors.New(msg1 + msg2)
 		logger.DieIf(err)
 	}
+	logger.DieIf(err)
 
 	// Print JSON Response
 	fmt.Println(prettyPrintJSON(result))
