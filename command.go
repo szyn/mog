@@ -124,10 +124,6 @@ func status(c *cli.Context) error {
 	result, err := client.GetTaskResult(attemptIDs, task)
 	logger.DieIf(err)
 
-	if result == nil {
-		logger.DieIf(errors.New("result not found"))
-	}
-
 	fmt.Println(prettyPrintJSON(result))
 
 	return nil
@@ -143,10 +139,6 @@ func pollingStatus(c *cli.Context) error {
 
 	result := getResult(c)
 	resultJSON := prettyPrintJSON(result)
-
-	if resultJSON == "" {
-		logger.DieIf(errors.New("result not found"))
-	}
 
 	if c.Command.Name == "status" {
 		fmt.Println(resultJSON)
@@ -200,9 +192,6 @@ func showLogs(c *cli.Context) error {
 	logfile, err := client.GetLogFileResult(attemptID, task)
 	logger.DieIf(err)
 
-	if logfile == nil {
-		logger.DieIf(errors.New("result not found"))
-	}
 
 	logtext, err := client.GetLogText(attemptID, logfile.FileName)
 	fmt.Println(logtext)
