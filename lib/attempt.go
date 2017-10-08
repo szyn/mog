@@ -2,12 +2,10 @@ package digdag
 
 import (
 	"errors"
-
-	"strings"
-
+	"strconv"
 	"net/http"
 	"net/url"
-
+	"github.com/hashicorp/errwrap"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -39,8 +37,8 @@ type Attempt struct {
 	FinishedAt       string      `json:"finishedAt"`
 }
 
-// PutAttempt is struct for create a new attempt
-type PutAttempt struct {
+// CreateAttempt is struct for create a new attempt
+type CreateAttempt struct {
 	Attempt
 	WorkflowID       string                 `json:"workflowId"`
 	SessionTime      string                 `json:"sessionTime"`
@@ -69,25 +67,26 @@ type Task struct {
 	IsGroup      bool          `json:"isGroup"`
 }
 
-// NewPutAttempt to create a new PutAttempt struct
-func NewPutAttempt(workflowID, sessionTime, retryAttemptName string) *PutAttempt {
-	pa := new(PutAttempt)
-	pa.WorkflowID = workflowID
-	pa.SessionTime = sessionTime
-	pa.RetryAttemptName = retryAttemptName
+// NewCreateAttempt to create a new CreateAttempt struct
+func NewCreateAttempt(workflowID, sessionTime, retryAttemptName string) *CreateAttempt {
+	ca := new(CreateAttempt)
+	ca.WorkflowID = workflowID
+	ca.SessionTime = sessionTime
+	ca.RetryAttemptName = retryAttemptName
 	// TODO: set the optional params.
-	pa.Params = map[string]interface{}{}
+	ca.Params = map[string]interface{}{}
 
-	return pa
+	return ca
 }
 
 // GetAttempts get attempts response
-func (c *Client) GetAttempts() ([]Attempt, error) {
+func (c *Client) GetAttempts(includeRetried bool) ([]Attempt, error) {
 	spath := "/api/attempts"
 
 	params := url.Values{}
 	params.Set("project", c.ProjectName)
 	params.Set("workflow", c.WorkflowName)
+	params.Set("include_retried", strconv.FormatBool(includeRetried))
 
 	var attempts *attempts
 	err := c.doReq(http.MethodGet, spath, params, &attempts)
@@ -95,37 +94,32 @@ func (c *Client) GetAttempts() ([]Attempt, error) {
 		return nil, err
 	}
 
+	// If any attempts not found
+	if len(attempts.Attempts) == 0 {
+		err := errors.New("attempts does not exist at `" + c.WorkflowName + "` workflow")
+		return nil, err
+	}
+
 	return attempts.Attempts, err
 }
 
-// GetLatestAttemptID to get a latest attemptID from sessionDate
-func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
-	attempts, err := c.GetAttempts()
+// GetAttemptIDs to get attemptID from sessionTime
+func (c *Client) GetAttemptIDs() (attemptIDs []string, err error) {
+	attempts, err := c.GetAttempts(true)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-
-	// If any attempts not found
-	if len(attempts) == 0 {
-		err := errors.New("attempts does not exist at `" + c.WorkflowName + "` workflow")
-		return attemptID, err
-	}
-
-	// c.SessionTime to date like this
-	date := c.SessionTime[0:19]
 
 	for k := range attempts {
 		sessionTime := attempts[k].SessionTime
 
-		if strings.Contains(sessionTime, date) {
-			attemptID = attempts[k].ID
-			return attemptID, err
+		if sessionTime == c.SessionTime {
+			attemptIDs = append(attemptIDs, attempts[k].ID)
 		}
 	}
 
 	// If any sessionTime not found
-	err = errors.New("input session " + date + " not found")
-	return attemptID, err
+	return attemptIDs, err
 }
 
 // GetTasks to get tasks list
@@ -142,29 +136,33 @@ func (c *Client) GetTasks(attemptID string) ([]Task, error) {
 }
 
 // GetTaskResult to get task result
-func (c *Client) GetTaskResult(attemptID, taskName string) (*Task, error) {
-	tasks, err := c.GetTasks(attemptID)
+func (c *Client) GetTaskResult(attemptIDs []string, taskName string) (*Task, error) {
 
-	for k := range tasks {
-		if tasks[k].FullName == taskName {
-			state := tasks[k].State
-			if state == "success" {
-				return &tasks[k], nil
+	for _, attemptID := range attemptIDs {
+		tasks, err := c.GetTasks(attemptID)
+
+		for k := range tasks {
+			if tasks[k].FullName == taskName {
+				state := tasks[k].State
+				if state == "success" {
+					return &tasks[k], nil
+				}
+
+				err = errors.New("task `" + taskName + "` state is " + state)
+				return nil, err
 			}
-
-			err = errors.New("task " + taskName + " state is " + state)
-			return nil, err
 		}
 	}
 
+	err := errors.New("task `" + taskName + "` result not found")
 	return nil, err
 }
 
 // CreateNewAttempt to create a new attempt
-func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt *PutAttempt, done bool, err error) {
+func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt *CreateAttempt, done bool, err error) {
 	spath := "/api/attempts"
 
-	pa := NewPutAttempt(workflowID, c.SessionTime, "")
+	ca := NewCreateAttempt(workflowID, c.SessionTime, "")
 
 	// Retry workflow
 	if retry == true {
@@ -174,19 +172,19 @@ func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt 
 		if err != nil {
 			return nil, done, err
 		}
-		pa.RetryAttemptName = string(textID)
+		ca.RetryAttemptName = string(textID)
 	}
 
 	// Create new attempt
-	err = c.doReq(http.MethodPut, spath, nil, &pa)
+	err = c.doReq(http.MethodPut, spath, nil, &ca)
 	if err != nil {
+		// if already session exist
+		if errwrap.Contains(err, "409 Conflict") {
+			done := true
+			return nil, done, err
+		}
 		return nil, done, err
 	}
 
-	// If already attempt done
-	if pa.Attempt.Done == true {
-		return nil, true, err
-	}
-
-	return pa, done, err
+	return ca, done, err
 }

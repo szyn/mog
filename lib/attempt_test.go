@@ -32,7 +32,7 @@ func TestGetAttempts(t *testing.T) {
 		t.Error("err should be nil but: ", err)
 	}
 
-	attempts, err := client.GetAttempts()
+	attempts, err := client.GetAttempts(true)
 	if err != nil {
 		t.Error("err should be nil but: ", err)
 	}
@@ -41,14 +41,6 @@ func TestGetAttempts(t *testing.T) {
 	}
 	if attempts[0].ID != "27" {
 		t.Fatalf("want %v but %v", "27", attempts[0].ID)
-	}
-
-	attemptID, err := client.GetLatestAttemptID()
-	if err != nil {
-		t.Error("err should be nil but: ", err)
-	}
-	if attemptID != "27" {
-		t.Fatalf("want %v but %v", "27", attemptID)
 	}
 }
 
@@ -76,7 +68,7 @@ func TestGetTasks(t *testing.T) {
 		t.Error("err should be nil but: ", err)
 	}
 
-	result, err := client.GetTaskResult("27", "+test+setup")
+	result, err := client.GetTaskResult([]string{"27"}, "+test+setup")
 	if err != nil {
 		t.Error("err should be nil but: ", err)
 	}
@@ -84,7 +76,7 @@ func TestGetTasks(t *testing.T) {
 		t.Fatalf("want %v but %v", "success", result.State)
 	}
 
-	result, err = client.GetTaskResult("27", "+test+failed")
+	result, err = client.GetTaskResult([]string{"27"}, "+test+failed")
 	if err == nil {
 		t.Fatalf("should be fail: %v", err)
 	}

@@ -1,0 +1,50 @@
+{
+	"sessions": [
+		{
+			"id": "2",
+			"project": {
+				"id": "1",
+				"name": "test"
+			},
+			"workflow": {
+				"name": "test",
+				"id": "2"
+			},
+			"sessionUuid": "eaf514b8-b40b-4aea-81e4-9f46c0e2d3d5",
+			"sessionTime": "2017-10-08T04:37:42+00:00",
+			"lastAttempt": {
+				"id": "2",
+				"retryAttemptName": null,
+				"done": true,
+				"success": false,
+				"cancelRequested": false,
+				"params": {},
+				"createdAt": "2017-10-08T04:37:42Z",
+				"finishedAt": "2017-10-08T04:37:44Z"
+			}
+		},
+		{
+			"id": "1",
+			"project": {
+				"id": "1",
+				"name": "test"
+			},
+			"workflow": {
+				"name": "test",
+				"id": "2"
+			},
+			"sessionUuid": "20a7a4fb-de67-473d-a9ec-90a0320872a1",
+			"sessionTime": "2017-10-08T03:34:42+00:00",
+			"lastAttempt": {
+				"id": "1",
+				"retryAttemptName": null,
+				"done": true,
+				"success": false,
+				"cancelRequested": false,
+				"params": {},
+				"createdAt": "2017-10-08T03:34:42Z",
+				"finishedAt": "2017-10-08T03:34:45Z"
+			}
+		}
+	]
+}

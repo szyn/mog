@@ -10,6 +10,7 @@ import (
 	"runtime"
 
 	"github.com/franela/goreq"
+	"github.com/hashicorp/errwrap"
 
 	"time"
 )
@@ -116,9 +117,7 @@ func (c *Client) doReq(method, spath string, params, res interface{}) error {
 		return err
 	}
 	if resp.StatusCode >= 400 {
-		// TODO: add method for parse API error response
-		err := errors.New("bad request: " + resp.Status)
-		return err
+		return errwrap.Wrapf("Bad request: {{err}}", errors.New(resp.Status))
 	}
 
 	return resp.Body.FromJsonTo(&res)
@@ -140,9 +139,7 @@ func (c *Client) doRawReq(method, spath string, params interface{}) (string, err
 	}
 
 	if req.StatusCode >= 400 {
-		// TODO: add method for parse API error response
-		err := errors.New("Bad request: " + req.Status)
-		return "", err
+		return "", errwrap.Wrapf("Bad request: {{err)}}", errors.New(req.Status))
 	}
 
 	body, err := req.Body.ToString()

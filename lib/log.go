@@ -1,6 +1,7 @@
 package digdag
 
 import (
+	"errors"
 	"net/http"
 
 	"bytes"
@@ -8,16 +9,17 @@ import (
 	"io/ioutil"
 )
 
-type logfiles struct {
+type logFiles struct {
 	Files []LogFile `json:"files"`
 }
 
+// LogFile is struct for digdag task log files
 type LogFile struct {
 	FileName string      `json:"fileName"`
 	FileSize int         `json:"fileSize"`
 	TaskName string      `json:"taskName"`
 	FileTime string      `json:"fileTime"`
-	AgentId  string      `json:"agentId"`
+	AgentID  string      `json:"agentId"`
 	Direct   interface{} `json:"direct"`
 }
 
@@ -25,30 +27,39 @@ type LogFile struct {
 func (c *Client) GetLogFiles(attemptID string) ([]LogFile, error) {
 	spath := "/api/logs/" + attemptID + "/files"
 
-	var logfiles *logfiles
-	err := c.doReq(http.MethodGet, spath, nil, &logfiles)
+	var logFiles *logFiles
+	err := c.doReq(http.MethodGet, spath, nil, &logFiles)
 	if err != nil {
 		return nil, err
 	}
 
-	return logfiles.Files, err
+	// if any logFiles not found
+	if len(logFiles.Files) == 0 {
+		return nil, errors.New("task log not found")
+	}
+
+	return logFiles.Files, err
 }
 
 // GetLogFileResult to get logfile result
 func (c *Client) GetLogFileResult(attemptID, taskName string) (*LogFile, error) {
-	logfiles, err := c.GetLogFiles(attemptID)
+	logFiles, err := c.GetLogFiles(attemptID)
+	if err != nil {
+		return nil, err
+	}
 
-	for l := range logfiles {
-		if logfiles[l].TaskName == taskName {
-			return &logfiles[l], nil
+	for l := range logFiles {
+		if logFiles[l].TaskName == taskName {
+			return &logFiles[l], nil
 		}
+		err = errors.New("task log `" + taskName + "` not found")
 	}
 
 	return nil, err
 }
 
 // GetLogText to get logtext
-func (c *Client) GetLogText(attemptID string, fileName string) (string, error) {
+func (c *Client) GetLogText(attemptID, fileName string) (string, error) {
 	spath := "/api/logs/" + attemptID + "/files/" + fileName
 
 	gztext, err := c.doRawReq(http.MethodGet, spath, nil)

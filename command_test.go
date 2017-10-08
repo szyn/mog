@@ -7,7 +7,13 @@ import (
 )
 
 func goRun(arg ...string) *testcli.Cmd {
-	c := testcli.Command("go", append([]string{"run", "format.go", "flag.go", "mog.go", "command.go"}, arg...)...)
+	c := testcli.Command("go", append([]string{
+		"run",
+		"format.go",
+		"flag.go",
+		"mog.go",
+		"command.go",
+	}, arg...)...)
 	return c
 }
 

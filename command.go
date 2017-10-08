@@ -118,15 +118,11 @@ func status(c *cli.Context) error {
 	}
 	logger.Log("task: " + task)
 
-	attemptID, err := client.GetLatestAttemptID()
+	attemptIDs, err := client.GetAttemptIDs()
 	logger.DieIf(err)
 
-	result, err := client.GetTaskResult(attemptID, task)
+	result, err := client.GetTaskResult(attemptIDs, task)
 	logger.DieIf(err)
-
-	if result == nil {
-		logger.DieIf(errors.New("result not found"))
-	}
 
 	fmt.Println(prettyPrintJSON(result))
 
@@ -143,10 +139,6 @@ func pollingStatus(c *cli.Context) error {
 
 	result := getResult(c)
 	resultJSON := prettyPrintJSON(result)
-
-	if resultJSON == "" {
-		logger.DieIf(errors.New("result not found"))
-	}
 
 	if c.Command.Name == "status" {
 		fmt.Println(resultJSON)
@@ -171,14 +163,13 @@ func newAttempt(c *cli.Context) error {
 	logger.Log("retry: " + strconv.FormatBool(retry))
 
 	result, done, err := client.CreateNewAttempt(workflowID, client.SessionTime, retry)
-	logger.DieIf(err)
-
 	if done == true {
 		msg1 := "A session for the requested session_time already exists.\n"
 		msg2 := "`mog retry` to run the session again for the same session_time."
 		err := errors.New(msg1 + msg2)
 		logger.DieIf(err)
 	}
+	logger.DieIf(err)
 
 	// Print JSON Response
 	fmt.Println(prettyPrintJSON(result))
@@ -195,18 +186,22 @@ func showLogs(c *cli.Context) error {
 	}
 	logger.Log("task: " + task)
 
-	attemptID, err := client.GetLatestAttemptID()
+	projectID, err := client.GetProjectIDByName()
+	logger.DieIf(err)
+	logger.Log("projectID: " + projectID)
+
+	sessions, err := client.GetProjectWorkflowSessions(projectID, client.WorkflowName)
 	logger.DieIf(err)
 
-	logfile, err := client.GetLogFileResult(attemptID, task)
+	lastAttemptID := sessions[0].LastAttempt.ID
+
+	logFile, err := client.GetLogFileResult(lastAttemptID, task)
 	logger.DieIf(err)
 
-	if logfile == nil {
-		logger.DieIf(errors.New("result not found"))
-	}
+	logText, err := client.GetLogText(lastAttemptID, logFile.FileName)
+	logger.DieIf(err)
 
-	logtext, err := client.GetLogText(attemptID, logfile.FileName)
-	fmt.Println(logtext)
+	fmt.Println(logText)
 
 	return nil
 }
@@ -224,7 +219,7 @@ func getResult(c *cli.Context) *digdag.Task {
 		case <-timeout:
 			logger.DieIf(fmt.Errorf("wait time exceeded limit at %d sec", maxTime))
 		case <-ticker:
-			attemptID, err := client.GetLatestAttemptID()
+			attemptIDs, err := client.GetAttemptIDs()
 			if err != nil {
 				logger.Info(err.Error())
 				logger.Info(fmt.Sprintf("state is not success. waiting %d sec for retry...", interval))
@@ -232,7 +227,7 @@ func getResult(c *cli.Context) *digdag.Task {
 			}
 
 			task := c.Args().Get(0)
-			result, err := client.GetTaskResult(attemptID, task)
+			result, err := client.GetTaskResult(attemptIDs, task)
 			if err != nil {
 				logger.Info(err.Error())
 				logger.Info(fmt.Sprintf("state is not success. waiting %d sec for retry...", interval))
