@@ -2,9 +2,6 @@ package digdag
 
 import (
 	"errors"
-
-	"strings"
-
 	"net/http"
 	"net/url"
 	"github.com/hashicorp/errwrap"
@@ -111,15 +108,11 @@ func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
 		return attemptID, err
 	}
 
-	// c.SessionTime to date like this
-	date := c.SessionTime[0:19]
-
 	for k := range attempts {
 		sessionTime := attempts[k].SessionTime
 
-		if strings.Contains(sessionTime, date) {
-			attemptID = attempts[k].ID
-			return attemptID, err
+		if sessionTime == c.SessionTime {
+			attemptIDs = append(attemptIDs, attempts[k].ID)
 		}
 	}
 
