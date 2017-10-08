@@ -103,10 +103,11 @@ func (c *Client) GetAttempts(includeRetried bool) ([]Attempt, error) {
 	return attempts.Attempts, err
 }
 
-// GetLatestAttemptID to get a latest attemptID from sessionDate
-func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
-	attempts, err := c.GetAttempts()
+// GetAttemptIDs to get attemptID from sessionTime
+func (c *Client) GetAttemptIDs() (attemptIDs []string, err error) {
+	attempts, err := c.GetAttempts(true)
 	if err != nil {
+		return nil, err
 	}
 
 	for k := range attempts {
@@ -118,8 +119,7 @@ func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
 	}
 
 	// If any sessionTime not found
-	err = errors.New("input session " + date + " not found")
-	return attemptID, err
+	return attemptIDs, err
 }
 
 // GetTasks to get tasks list
