@@ -188,11 +188,5 @@ func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt 
 		return nil, done, err
 	}
 
-	// If already attempt done
-	if pa.Attempt.Done == true {
-		return nil, true, err
-	}
-
-	return pa, done, err
 	return ca, done, err
 }
