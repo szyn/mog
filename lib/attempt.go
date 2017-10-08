@@ -94,6 +94,12 @@ func (c *Client) GetAttempts(includeRetried bool) ([]Attempt, error) {
 		return nil, err
 	}
 
+	// If any attempts not found
+	if len(attempts.Attempts) == 0 {
+		err := errors.New("attempts does not exist at `" + c.WorkflowName + "` workflow")
+		return nil, err
+	}
+
 	return attempts.Attempts, err
 }
 
@@ -101,13 +107,6 @@ func (c *Client) GetAttempts(includeRetried bool) ([]Attempt, error) {
 func (c *Client) GetLatestAttemptID() (attemptID string, err error) {
 	attempts, err := c.GetAttempts()
 	if err != nil {
-		return "", err
-	}
-
-	// If any attempts not found
-	if len(attempts) == 0 {
-		err := errors.New("attempts does not exist at `" + c.WorkflowName + "` workflow")
-		return attemptID, err
 	}
 
 	for k := range attempts {
