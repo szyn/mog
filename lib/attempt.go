@@ -136,21 +136,25 @@ func (c *Client) GetTasks(attemptID string) ([]Task, error) {
 }
 
 // GetTaskResult to get task result
-func (c *Client) GetTaskResult(attemptID, taskName string) (*Task, error) {
-	tasks, err := c.GetTasks(attemptID)
+func (c *Client) GetTaskResult(attemptIDs []string, taskName string) (*Task, error) {
 
-	for k := range tasks {
-		if tasks[k].FullName == taskName {
-			state := tasks[k].State
-			if state == "success" {
-				return &tasks[k], nil
+	for _, attemptID := range attemptIDs {
+		tasks, err := c.GetTasks(attemptID)
+
+		for k := range tasks {
+			if tasks[k].FullName == taskName {
+				state := tasks[k].State
+				if state == "success" {
+					return &tasks[k], nil
+				}
+
+				err = errors.New("task `" + taskName + "` state is " + state)
+				return nil, err
 			}
-
-			err = errors.New("task " + taskName + " state is " + state)
-			return nil, err
 		}
 	}
 
+	err := errors.New("task `" + taskName + "` result not found")
 	return nil, err
 }
 
