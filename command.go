@@ -121,7 +121,7 @@ func status(c *cli.Context) error {
 	attemptIDs, err := client.GetAttemptIDs()
 	logger.DieIf(err)
 
-	result, err := client.GetTaskResult(attemptID, task)
+	result, err := client.GetTaskResult(attemptIDs, task)
 	logger.DieIf(err)
 
 	if result == nil {
@@ -232,7 +232,7 @@ func getResult(c *cli.Context) *digdag.Task {
 			}
 
 			task := c.Args().Get(0)
-			result, err := client.GetTaskResult(attemptID, task)
+			result, err := client.GetTaskResult(attemptIDs, task)
 			if err != nil {
 				logger.Info(err.Error())
 				logger.Info(fmt.Sprintf("state is not success. waiting %d sec for retry...", interval))
