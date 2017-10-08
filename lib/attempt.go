@@ -39,8 +39,8 @@ type Attempt struct {
 	FinishedAt       string      `json:"finishedAt"`
 }
 
-// PutAttempt is struct for create a new attempt
-type PutAttempt struct {
+// CreateAttempt is struct for create a new attempt
+type CreateAttempt struct {
 	Attempt
 	WorkflowID       string                 `json:"workflowId"`
 	SessionTime      string                 `json:"sessionTime"`
@@ -69,16 +69,16 @@ type Task struct {
 	IsGroup      bool          `json:"isGroup"`
 }
 
-// NewPutAttempt to create a new PutAttempt struct
-func NewPutAttempt(workflowID, sessionTime, retryAttemptName string) *PutAttempt {
-	pa := new(PutAttempt)
-	pa.WorkflowID = workflowID
-	pa.SessionTime = sessionTime
-	pa.RetryAttemptName = retryAttemptName
+// NewCreateAttempt to create a new CreateAttempt struct
+func NewCreateAttempt(workflowID, sessionTime, retryAttemptName string) *CreateAttempt {
+	ca := new(CreateAttempt)
+	ca.WorkflowID = workflowID
+	ca.SessionTime = sessionTime
+	ca.RetryAttemptName = retryAttemptName
 	// TODO: set the optional params.
-	pa.Params = map[string]interface{}{}
+	ca.Params = map[string]interface{}{}
 
-	return pa
+	return ca
 }
 
 // GetAttempts get attempts response
@@ -161,10 +161,10 @@ func (c *Client) GetTaskResult(attemptID, taskName string) (*Task, error) {
 }
 
 // CreateNewAttempt to create a new attempt
-func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt *PutAttempt, done bool, err error) {
+func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt *CreateAttempt, done bool, err error) {
 	spath := "/api/attempts"
 
-	pa := NewPutAttempt(workflowID, c.SessionTime, "")
+	ca := NewCreateAttempt(workflowID, c.SessionTime, "")
 
 	// Retry workflow
 	if retry == true {
@@ -174,11 +174,11 @@ func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt 
 		if err != nil {
 			return nil, done, err
 		}
-		pa.RetryAttemptName = string(textID)
+		ca.RetryAttemptName = string(textID)
 	}
 
 	// Create new attempt
-	err = c.doReq(http.MethodPut, spath, nil, &pa)
+	err = c.doReq(http.MethodPut, spath, nil, &ca)
 	if err != nil {
 		return nil, done, err
 	}
@@ -189,4 +189,5 @@ func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt 
 	}
 
 	return pa, done, err
+	return ca, done, err
 }
