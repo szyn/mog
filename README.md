@@ -39,7 +39,7 @@ USAGE:
    mog [global options] command [command options] [arguments...]
 
 VERSION:
-   v0.1.0
+   v0.1.2
 
 COMMANDS:
      status, s  Show a status of the task
