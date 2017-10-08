@@ -3,6 +3,7 @@ package digdag
 import (
 	"net/http"
 	"net/url"
+	"errors"
 )
 
 // projects is struct for received json
@@ -29,6 +30,12 @@ func (c *Client) GetProjectIDByName() (projectID string, err error) {
 		return "", err
 	}
 
+	// if project not found
+	if len(projects.Projects) == 0 {
+		return "", errors.New("project not found: `" + c.ProjectName + "`")
+	}
+
 	projectID = projects.Projects[0].ID
+
 	return projectID, nil
 }
