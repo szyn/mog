@@ -27,7 +27,7 @@ func TestHelp(t *testing.T) {
 }
 
 func TestVersion(t *testing.T) {
-	version := "v0.1.1"
+	version := "v0.1.2"
 
 	c := goRun("--version")
 	c.Run()
