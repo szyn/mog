@@ -3,6 +3,7 @@ package digdag
 import (
 	"net/http"
 	"net/url"
+	"errors"
 )
 
 type workflows struct {
@@ -27,6 +28,11 @@ func (c *Client) GetWorkflowID(projectID string) (workflowID string, err error) 
 	err = c.doReq(http.MethodGet, spath, params, &workflows)
 	if err != nil {
 		return "", err
+	}
+
+	// if workflow not found
+	if len(workflows.Workflows) == 0 {
+		return "", errors.New("workflow not found `" + c.WorkflowName + "`")
 	}
 
 	workflowID = workflows.Workflows[0].ID
