@@ -118,7 +118,7 @@ func status(c *cli.Context) error {
 	}
 	logger.Log("task: " + task)
 
-	attemptID, err := client.GetLatestAttemptID()
+	attemptIDs, err := client.GetAttemptIDs()
 	logger.DieIf(err)
 
 	result, err := client.GetTaskResult(attemptID, task)
@@ -224,7 +224,7 @@ func getResult(c *cli.Context) *digdag.Task {
 		case <-timeout:
 			logger.DieIf(fmt.Errorf("wait time exceeded limit at %d sec", maxTime))
 		case <-ticker:
-			attemptID, err := client.GetLatestAttemptID()
+			attemptIDs, err := client.GetAttemptIDs()
 			if err != nil {
 				logger.Info(err.Error())
 				logger.Info(fmt.Sprintf("state is not success. waiting %d sec for retry...", interval))
