@@ -7,7 +7,7 @@ import (
 
 	"net/http"
 	"net/url"
-
+	"github.com/hashicorp/errwrap"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -180,6 +180,11 @@ func (c *Client) CreateNewAttempt(workflowID, date string, retry bool) (attempt 
 	// Create new attempt
 	err = c.doReq(http.MethodPut, spath, nil, &ca)
 	if err != nil {
+		// if already session exist
+		if errwrap.Contains(err, "409 Conflict") {
+			done := true
+			return nil, done, err
+		}
 		return nil, done, err
 	}
 
