@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 )
 
-type logfiles struct {
 type logFiles struct {
 	Files []LogFile `json:"files"`
 }
@@ -51,7 +50,7 @@ func (c *Client) GetLogFileResult(attemptID, taskName string) (*LogFile, error) 
 }
 
 // GetLogText to get logtext
-func (c *Client) GetLogText(attemptID string, fileName string) (string, error) {
+func (c *Client) GetLogText(attemptID, fileName string) (string, error) {
 	spath := "/api/logs/" + attemptID + "/files/" + fileName
 
 	gztext, err := c.doRawReq(http.MethodGet, spath, nil)
