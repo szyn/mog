@@ -186,15 +186,22 @@ func showLogs(c *cli.Context) error {
 	}
 	logger.Log("task: " + task)
 
-	attemptID, err := client.GetLatestAttemptID()
+	projectID, err := client.GetProjectIDByName()
+	logger.DieIf(err)
+	logger.Log("projectID: " + projectID)
+
+	sessions, err := client.GetProjectWorkflowSessions(projectID, client.WorkflowName)
 	logger.DieIf(err)
 
-	logfile, err := client.GetLogFileResult(attemptID, task)
+	lastAttemptID := sessions[0].LastAttempt.ID
+
+	logFile, err := client.GetLogFileResult(lastAttemptID, task)
 	logger.DieIf(err)
 
+	logText, err := client.GetLogText(lastAttemptID, logFile.FileName)
+	logger.DieIf(err)
 
-	logtext, err := client.GetLogText(attemptID, logfile.FileName)
-	fmt.Println(logtext)
+	fmt.Println(logText)
 
 	return nil
 }
