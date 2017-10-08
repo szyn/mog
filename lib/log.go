@@ -1,6 +1,7 @@
 package digdag
 
 import (
+	"errors"
 	"net/http"
 
 	"bytes"
@@ -32,18 +33,26 @@ func (c *Client) GetLogFiles(attemptID string) ([]LogFile, error) {
 		return nil, err
 	}
 
-	return logfiles.Files, err
+	// if any logFiles not found
+	if len(logFiles.Files) == 0 {
+		return nil, errors.New("task log not found")
+	}
+
+	return logFiles.Files, err
 }
 
 // GetLogFileResult to get logfile result
 func (c *Client) GetLogFileResult(attemptID, taskName string) (*LogFile, error) {
-	logfiles, err := c.GetLogFiles(attemptID)
 	logFiles, err := c.GetLogFiles(attemptID)
+	if err != nil {
+		return nil, err
+	}
 
 	for l := range logFiles {
 		if logFiles[l].TaskName == taskName {
 			return &logFiles[l], nil
 		}
+		err = errors.New("task log `" + taskName + "` not found")
 	}
 
 	return nil, err
