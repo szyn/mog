@@ -2,6 +2,7 @@ package digdag
 
 import (
 	"errors"
+	"strconv"
 	"net/http"
 	"net/url"
 	"github.com/hashicorp/errwrap"
@@ -79,12 +80,13 @@ func NewCreateAttempt(workflowID, sessionTime, retryAttemptName string) *CreateA
 }
 
 // GetAttempts get attempts response
-func (c *Client) GetAttempts() ([]Attempt, error) {
+func (c *Client) GetAttempts(includeRetried bool) ([]Attempt, error) {
 	spath := "/api/attempts"
 
 	params := url.Values{}
 	params.Set("project", c.ProjectName)
 	params.Set("workflow", c.WorkflowName)
+	params.Set("include_retried", strconv.FormatBool(includeRetried))
 
 	var attempts *attempts
 	err := c.doReq(http.MethodGet, spath, params, &attempts)
