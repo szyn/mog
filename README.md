@@ -106,7 +106,7 @@ Use `mog start`
 e.g.
 #############################################
 # host: localhost (default)
-# project: default (default)
+# project: sample
 # workflow: digdag-sample
 # sessionTime: 2017-10-08T15:00:00+00:00 (UTC)
 #############################################
@@ -145,7 +145,7 @@ Use `mog retry`
 e.g.
 #############################################
 # host: localhost (default)
-# project: default (default)
+# project: sample
 # workflow: digdag-sample
 # sessionTime: 2017-10-08T15:00:00+00:00 (UTC)
 #############################################
