@@ -66,31 +66,31 @@ Use `mog status`
 e.g.
 #############################################
 # host: localhost (default)
-# project: default (default)
+# project: sample
 # workflow: digdag-sample
-# sessionDate: 2017-05-02
+# sessionTime: 2017-10-08T15:00:00+00:00 (UTC)
 # taskName: +digdag-sample+disp_current_date
 #############################################
 
-$ mog -H localhost status -w digdag-sample --session 2017-05-02 +digdag-sample+disp_current_date
+$ mog -H localhost status -p sample -w digdag-sample --session 2017-10-08T15:00:00+00:00 +digdag-sample+disp_current_date
 {
-  "config": {
-    "echo>": "${moment(session_time).utc().format('YYYY-MM-DD HH:mm:ss Z')}"
-  },
-  "exportParams": {},
-  "fullName": "+digdag-sample+disp_current_date",
-  "id": "9",
-  "isGroup": false,
-  "parentId": "7",
-  "retryAt": null,
-  "startedAt": "2017-05-02T06:34:05Z",
-  "state": "success",
-  "stateParams": {},
-  "storeParams": {},
-  "updatedAt": "2017-05-02T06:34:08Z",
-  "upstreams": [
-    "8"
-  ]
+    "id": "41",
+    "fullName": "+digdag-sample+disp_current_date",
+    "parentId": "39",
+    "config": {
+        "echo>": "${moment(session_time).utc().format('YYYY-MM-DD HH:mm:ss Z')}"
+    },
+    "upstreams": [
+        "40"
+    ],
+    "state": "success",
+    "exportParams": {},
+    "storeParams": {},
+    "stateParams": {},
+    "updatedAt": "2017-10-09T14:50:26Z",
+    "retryAt": null,
+    "startedAt": "2017-10-09T14:50:26Z",
+    "isGroup": false
 }
 ```
 
@@ -108,33 +108,32 @@ e.g.
 # host: localhost (default)
 # project: default (default)
 # workflow: digdag-sample
-# sessionDate: 2017-05-02
+# sessionTime: 2017-10-08T15:00:00+00:00 (UTC)
 #############################################
 
-$ mog -H localhost start -w digdag-sample --session 2017-05-02
+$ mog -H localhost start -p sample -w digdag-sample --session 2017-10-09
 {
-  "cancelRequested": false,
-  "createdAt": "2017-05-02T06:34:03Z",
-  "done": false,
-  "finishedAt": null,
-  "id": "3",
-  "index": 1,
-  "params": {},
-  "project": {
-    "id": "1",
-    "name": "default"
-  },
-  "retryAttemptName": null,
-  "sessionId": "3",
-  "sessionTime": "2017-05-02T00:00:00+00:00",
-  "sessionUuid": "b88a9653-9a34-4763-aa8c-5de213f4826a",
-  "success": false,
-  "workflow": {
-    "id": "4",
-    "name": "digdag-sample"
-  }
+    "id": "5",
+    "index": 1,
+    "project": {
+        "id": "2",
+        "name": "sample"
+    },
+    "workflow": {
+        "name": "digdag-sample",
+        "id": "3"
+    },
+    "sessionId": "3",
+    "sessionUuid": "948a9083-095c-4eea-b910-d63763006de7",
+    "done": false,
+    "success": false,
+    "cancelRequested": false,
+    "createdAt": "2017-10-09T14:50:03Z",
+    "finishedAt": "",
+    "workflowId": "3",
+    "sessionTime": "2017-10-08T15:00:00+00:00",
+    "params": {}
 }
-
 ```
 
 See also `mog start --help`
@@ -148,33 +147,33 @@ e.g.
 # host: localhost (default)
 # project: default (default)
 # workflow: digdag-sample
-# sessionDate: 2017-05-02
+# sessionTime: 2017-10-08T15:00:00+00:00 (UTC)
 #############################################
 
-$ mog -H localhost retry -w digdag-sample --session 2017-05-02
+$ mog -H localhost retry -p sample -w digdag-sample --session 2017-10-09
 {
-  "cancelRequested": false,
-  "createdAt": "2017-05-02T06:34:03Z",
-  "done": false,
-  "finishedAt": null,
-  "id": "4",
-  "index": 1,
-  "params": {},
-  "project": {
-    "id": "1",
-    "name": "default"
-  },
-  "retryAttemptName": "47453eb1-a07e-4e8f-a7a5-27d399d0852d",
-  "sessionId": "3",
-  "sessionTime": "2017-05-02T00:00:00+00:00",
-  "sessionUuid": "b88a9653-9a34-4763-aa8c-5de213f4826a",
-  "success": false,
-  "workflow": {
-    "id": "4",
-    "name": "digdag-sample"
-  }
+    "id": "6",
+    "index": 2,
+    "project": {
+        "id": "2",
+        "name": "sample"
+    },
+    "workflow": {
+        "name": "digdag-sample",
+        "id": "3"
+    },
+    "sessionId": "3",
+    "sessionUuid": "948a9083-095c-4eea-b910-d63763006de7",
+    "done": false,
+    "success": false,
+    "cancelRequested": false,
+    "createdAt": "2017-10-09T14:50:26Z",
+    "finishedAt": "",
+    "workflowId": "3",
+    "sessionTime": "2017-10-08T15:00:00+00:00",
+    "retryAttemptName": "f01529fd-fc2c-4f77-b6c5-f484321e2001",
+    "params": {}
 }
-
 ```
 
 See also `mog retry --help`
