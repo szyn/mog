@@ -1,8 +1,7 @@
----
 machine:
   timezone: Asia/Tokyo
   environment:
-    GO_VERSION: "1.8.1"
+    GO_VERSION: "1.9.2"
     GODIST: "go${GO_VERSION}.linux-amd64.tar.gz"
     IMPORT_PATH: "/home/ubuntu/.go_workspace/src/github.com/${CIRCLE_PROJECT_USERNAME}"
     APP_PATH: "${IMPORT_PATH}/${CIRCLE_PROJECT_REPONAME}"
