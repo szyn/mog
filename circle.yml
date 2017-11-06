@@ -13,19 +13,17 @@ machine:
 
 dependencies:
   pre:
-    - sudo add-apt-repository ppa:masterminds/glide -y
-    - sudo apt-get update
-    - sudo apt-get install glide -y
+    - go get -u github.com/golang/dep/cmd/dep
   override:
     - mkdir -p "${IMPORT_PATH}"
     - ln -sf $(pwd) ${APP_PATH}
-    - glide install -v
+    - cd ${APP_PATH} && dep ensure
 
 test:
   pre:
     - go get -u github.com/mattn/goveralls
   override:
-    - cd ${APP_PATH} && go test $(glide novendor)
+    - cd ${APP_PATH} && go test
     - cd ${APP_PATH} && go test -v ./lib -cover -coverprofile=/home/ubuntu/coverage.out
   post:
     # - /home/ubuntu/.go_workspace/bin/goveralls -coverprofile=/home/ubuntu/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
