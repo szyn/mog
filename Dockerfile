@@ -1,10 +1,13 @@
-FROM golang:1.8.1
-
-RUN go get github.com/Masterminds/glide \
- && go install github.com/Masterminds/glide \
- && go get -u github.com/mitchellh/gox \
- && go get -u github.com/tcnksm/ghr
+FROM golang:1.8.1 AS build-env
+LABEL maintainer "szyn <aqr.aqua@gmail.com>"
 
 WORKDIR /go/src/github.com/szyn/mog
+COPY . .
 
-CMD ./_tool/build.sh
+RUN go get -u github.com/golang/dep/cmd/dep && \
+    dep ensure && \
+    CGO_ENABLED=0 go build
+
+FROM busybox:1.27.2
+COPY --from=build-env /go/src/github.com/szyn/mog/mog /usr/local/bin/mog
+ENTRYPOINT ["/usr/local/bin/mog"]
