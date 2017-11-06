@@ -24,7 +24,7 @@ test:
   pre:
     - go get -u github.com/mattn/goveralls
   override:
-    - cd ${APP_PATH} && go test $(glide novendor)
+    - cd ${APP_PATH} && go test
     - cd ${APP_PATH} && go test -v ./lib -cover -coverprofile=/home/ubuntu/coverage.out
   post:
     # - /home/ubuntu/.go_workspace/bin/goveralls -coverprofile=/home/ubuntu/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
