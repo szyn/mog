@@ -1,4 +1,4 @@
-FROM golang:1.8.1 AS build-env
+FROM golang:1.9.2 AS build-env
 LABEL maintainer "szyn <aqr.aqua@gmail.com>"
 
 WORKDIR /go/src/github.com/szyn/mog
