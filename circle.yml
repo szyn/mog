@@ -18,7 +18,7 @@ dependencies:
   override:
     - mkdir -p "${IMPORT_PATH}"
     - ln -sf $(pwd) ${APP_PATH}
-    - dep ensure
+    - cd ${APP_PATH} && dep ensure
 
 test:
   pre:
