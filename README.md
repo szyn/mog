@@ -17,7 +17,7 @@ Digdag is an open source Workload Automation System (https://www.digdag.io)
 
 # Installation
 
-```
+```console
 $ curl https://raw.githubusercontent.com/szyn/mog/master/_tool/get | sh
 ```
 
@@ -25,6 +25,14 @@ Note:
 Get the latest release of mog.   
 The script puts it with Go binaries at `/usr/local/bin`.   
 Also you can get binaries at https://github.com/szyn/mog/releases
+
+### docker
+We can also to use docker image.  
+https://hub.docker.com/r/szyn/mog
+
+```console
+$ docker run --rm szyn/mog
+```
 
 # Usage
 
@@ -57,7 +65,7 @@ GLOBAL OPTIONS:
    --version, -v           print the version
 ```
 
-## Expamles
+## Examples
 
 #### Check a status of the task
 Use `mog status`
