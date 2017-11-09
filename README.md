@@ -3,8 +3,9 @@ mog
 [![GitHub release](https://img.shields.io/github/release/szyn/mog.svg?style=flat-square)](https://github.com/szyn/mog/releases/latest)
 [![Circle CI](https://img.shields.io/circleci/project/github/szyn/mog.svg?style=flat-square)](https://circleci.com/gh/szyn/mog)
 [![Language](https://img.shields.io/badge/language-go-brightgreen.svg?style=flat-square)](https://golang.org/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 [![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/szyn/mog)
+[![Docker Pulls](https://img.shields.io/docker/pulls/szyn/mog.svg?style=flat-square)](https://hub.docker.com/r/szyn/mog/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](https://opensource.org/licenses/Apache-2.0)
 
 mog - A CLI Tool for Digdag.
 
@@ -28,7 +29,7 @@ Also you can get binaries at https://github.com/szyn/mog/releases
 
 ### docker
 We can also to use docker image.  
-https://hub.docker.com/r/szyn/mog
+See also https://hub.docker.com/r/szyn/mog
 
 ```console
 $ docker run --rm szyn/mog
