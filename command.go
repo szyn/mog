@@ -1,6 +1,7 @@
 package main
 
 import (
+	"regexp"
 	"time"
 
 	"errors"
@@ -8,9 +9,15 @@ import (
 
 	"strconv"
 
-	digdag "github.com/szyn/mog/lib"
+	digdag "github.com/szyn/digdag-go-client"
 	"github.com/szyn/mog/logger"
 	"github.com/urfave/cli"
+)
+
+const (
+	dailyTimeFormat  = "2006-01-02T00:00:00-07:00"
+	hourlyTimeFormat = "2006-01-02T15:00:00-07:00"
+	nowTimeFormat    = "2006-01-02T15:04:05-07:00"
 )
 
 // Commands is the avalible commands
@@ -80,19 +87,6 @@ var commandLog = cli.Command{
 
 // NewClientFromContext
 func newClientFromContext(c *cli.Context) *digdag.Client {
-	project := c.String("project")
-	workflow := c.String("workflow")
-	session := c.String("session")
-
-	if workflow == "" {
-		err := errors.New("--workflow option")
-		if c.App.OnUsageError != nil {
-			c.App.OnUsageError(c, err, false)
-		} else {
-			c.Command.OnUsageError(c, err, true)
-		}
-	}
-
 	ssl := c.Bool("ssl")
 	host := c.GlobalString("host")
 	port := strconv.Itoa(c.GlobalInt("port"))
@@ -103,7 +97,7 @@ func newClientFromContext(c *cli.Context) *digdag.Client {
 	}
 	url := scheme + "//" + host + ":" + port
 
-	client, err := digdag.NewClient(url, project, workflow, session, false)
+	client, err := digdag.NewClient(url, c.GlobalBool("verbose"))
 	logger.DieIf(err)
 
 	return client
@@ -111,6 +105,10 @@ func newClientFromContext(c *cli.Context) *digdag.Client {
 
 func status(c *cli.Context) error {
 	client := newClientFromContext(c)
+	projectName := c.String("project")
+	workflowName := c.String("workflow")
+	targetSession, err := convertSession(c.String("session"))
+	logger.DieIf(err)
 
 	task := c.Args().Get(0)
 	if task == "" {
@@ -118,7 +116,7 @@ func status(c *cli.Context) error {
 	}
 	logger.Log("task: " + task)
 
-	attemptIDs, err := client.GetAttemptIDs()
+	attemptIDs, err := client.GetAttemptIDs(projectName, workflowName, targetSession)
 	logger.DieIf(err)
 
 	result, err := client.GetTaskResult(attemptIDs, task)
@@ -150,19 +148,22 @@ func pollingStatus(c *cli.Context) error {
 func newAttempt(c *cli.Context) error {
 	client := newClientFromContext(c)
 
-	projectID, err := client.GetProjectIDByName()
+	project, err := client.GetProject(c.String("project"))
 	logger.DieIf(err)
-	logger.Log("projectID: " + projectID)
+	logger.Log("projectID: " + project.ID)
 
-	workflowID, err := client.GetWorkflowID(projectID)
+	workflow, err := client.GetWorkflow(project.ID, c.String("workflow"))
 	logger.DieIf(err)
-	logger.Log("workflowID: " + workflowID)
+	logger.Log("workflowID: " + workflow.ID)
 
 	var retry bool
 	retry = c.BoolT("retry")
 	logger.Log("retry: " + strconv.FormatBool(retry))
 
-	result, done, err := client.CreateNewAttempt(workflowID, client.SessionTime, retry)
+	targetSession, err := convertSession(c.String("session"))
+	logger.DieIf(err)
+
+	result, done, err := client.CreateNewAttempt(workflow.ID, targetSession, []string{}, retry)
 	if done == true {
 		msg1 := "A session for the requested session_time already exists.\n"
 		msg2 := "`mog retry` to run the session again for the same session_time."
@@ -186,11 +187,11 @@ func showLogs(c *cli.Context) error {
 	}
 	logger.Log("task: " + task)
 
-	projectID, err := client.GetProjectIDByName()
+	project, err := client.GetProject(c.String("project"))
 	logger.DieIf(err)
-	logger.Log("projectID: " + projectID)
+	logger.Log("projectID: " + project.ID)
 
-	sessions, err := client.GetProjectWorkflowSessions(projectID, client.WorkflowName)
+	sessions, err := client.GetProjectWorkflowSessions(project.ID, c.String("workflow"))
 	logger.DieIf(err)
 
 	lastAttemptID := sessions[0].LastAttempt.ID
@@ -213,13 +214,17 @@ func getResult(c *cli.Context) *digdag.Task {
 	interval := c.Int("interval")
 	ticker := time.Tick(time.Duration(interval) * time.Second)
 	timeout := time.After(time.Duration(maxTime) * time.Second)
+	projectName := c.String("project")
+	workflowName := c.String("workflow")
+	targetSession, err := convertSession(c.String("session"))
+	logger.DieIf(err)
 
 	for {
 		select {
 		case <-timeout:
 			logger.DieIf(fmt.Errorf("wait time exceeded limit at %d sec", maxTime))
 		case <-ticker:
-			attemptIDs, err := client.GetAttemptIDs()
+			attemptIDs, err := client.GetAttemptIDs(projectName, workflowName, targetSession)
 			if err != nil {
 				logger.Info(err.Error())
 				logger.Info(fmt.Sprintf("state is not success. waiting %d sec for retry...", interval))
@@ -238,4 +243,38 @@ func getResult(c *cli.Context) *digdag.Task {
 			}
 		}
 	}
+}
+
+func convertSession(session string) (string, error) {
+	var sessionTime string
+	s := regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]$`).Match([]byte(session))
+	if s == true {
+		session += "T00:00:00"
+	}
+	l := regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]T[0-9]{2}:[0-9]{2}:[0-9]{2}$`).Match([]byte(session))
+	if l == true {
+		session += time.Now().Format("-07:00")
+	}
+	r := regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]T[0-9]{2}:[0-9]{2}:[0-9]{2}(\+|-)[0-9]{2}:[0-9]{2}$`).Match([]byte(session))
+	if r == true {
+		inputSession, err := time.Parse(nowTimeFormat, session)
+		if err != nil {
+			return "", err
+		}
+		sessionTime = inputSession.Format(nowTimeFormat)
+		return sessionTime, nil
+	}
+
+	switch session {
+	case "daily":
+		sessionTime = time.Now().Format(dailyTimeFormat)
+	case "hourly":
+		sessionTime = time.Now().Format(hourlyTimeFormat)
+	case "now":
+		sessionTime = time.Now().Format(nowTimeFormat)
+	default: // default is dailyTimeFormat
+		sessionTime = time.Now().Format(dailyTimeFormat)
+	}
+
+	return sessionTime, nil
 }
