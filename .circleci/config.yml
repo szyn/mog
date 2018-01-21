@@ -1,0 +1,39 @@
+version: 2
+jobs:
+  build:
+    working_directory: /go/src/github.com/szyn/mog
+    docker:
+      - image: circleci/golang:1.9
+    steps:
+      - checkout
+      - run: go get -u github.com/golang/dep/cmd/dep
+      - run: dep ensure
+      - run: go test -v ./...
+    
+  deploy:
+    working_directory: /go/src/github.com/szyn/mog
+    docker:
+      - image: circleci/golang:1.9
+    steps:
+      - checkout
+      - run: go get -u github.com/mitchellh/gox
+      - run: go get -u github.com/tcnksm/ghr
+      - run: gox -osarch "linux/amd64 linux/arm darwin/amd64 windows/amd64" -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}"
+      - run: ghr -delete -t ${GITHUB_TOKEN} -u szyn -r ${CIRCLE_PROJECT_REPONAME} --replace $(git describe --tags | perl -anlE 'm/\A([^\-]+)-?/; print $1') dist/
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: /.*/
+  deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
