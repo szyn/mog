@@ -40,7 +40,8 @@ build: deps
 cross-build: deps
 	for os in darwin linux windows; do \
 		for arch in amd64 386; do \
-			GOOS=$$os GOARCH=$$arch CGO_ENABLED=0 go build $(LDFLAGS) -o dist/$$os-$$arch/$(NAME); \
+			GOOS=$$os GOARCH=$$arch CGO_ENABLED=0 \
+			go build $(LDFLAGS) -o dist/$(NAME)_$$os\_$$arch; \
 		done; \
 	done
 
