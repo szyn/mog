@@ -49,11 +49,7 @@ cross-build: deps
 ## Make dist
 dist:
 	cd dist && \
-	$(DIST_DIRS) cp ../LICENSE {} \; && \
-	$(DIST_DIRS) cp ../README.md {} \; && \
-	$(DIST_DIRS) tar -zcf $(NAME)-$(VERSION)-{}.tar.gz {} \; && \
-	$(DIST_DIRS) rm -rf {} + && \
-	shasum -a 256 *.tar.gz > sha256sums.txt && \
+	shasum -a 256 mog_* > sha256sums.txt && \
 	cd ..
 
 .PHONY: deps
