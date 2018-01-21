@@ -25,6 +25,11 @@ clean:
 test: deps
 	go test -cover -v $(go list ./... | grep -v /vendor/)
 
+.PHONY: install
+## Install binary to $GOPATH/bin
+install: deps
+	go install $(LDFLAGS)
+
 .PHONY: build
 ## Run build binary to bin
 build: deps
