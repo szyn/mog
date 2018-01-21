@@ -41,7 +41,7 @@ cross-build: deps
 	for os in darwin linux windows; do \
 		for arch in amd64 386; do \
 			GOOS=$$os GOARCH=$$arch CGO_ENABLED=0 \
-			go build $(LDFLAGS) -o dist/$(NAME)_$$os\_$$arch; \
+			go build $(LDFLAGS) -o dist/$$os-$$arch/$(NAME); \
 		done; \
 	done
 
@@ -49,7 +49,15 @@ cross-build: deps
 ## Make dist
 dist:
 	cd dist && \
-	shasum -a 256 mog_* > sha256sums.txt && \
+	for os in darwin linux windows; do \
+		for arch in amd64 386; do \
+			cd $$os-$$arch && \
+			tar -zcvf ../$(NAME)_$$os\_$$arch.tar.gz . && \
+			cd ..; \
+		done; \
+	done && \
+	$(DIST_DIRS) rm -rf {} + && \
+	shasum -a 256 * > sha256sums.txt && \
 	cd ..
 
 .PHONY: deps
