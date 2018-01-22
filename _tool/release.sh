@@ -79,7 +79,7 @@ release()
     sed -i '' -e "s/${REGEX}/${TAG_NAME}/g" ${SCRIPT_DIR}/../mog.go
 
     # generate CHANGELOG.md
-    github-changes -o szyn -r mog --only-pulls -n ${TAG_NAME}
+    github-changes -o szyn -r mog --only-pulls --use-commit-body -n ${TAG_NAME}
     git add ${SCRIPT_DIR}/../CHANGELOG.md
     git commit -m "Update CHANGELOG.md"
     

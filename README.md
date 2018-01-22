@@ -18,21 +18,35 @@ Digdag is an open source Workload Automation System (https://www.digdag.io)
 
 # Installation
 
-```console
-$ curl https://raw.githubusercontent.com/szyn/mog/master/_tool/get | sh
+You can download the binary from the [releases](https://github.com/szyn/mog/releases) page.
+
+e.g. os: `linux`, arch: `amd64`  
+Download to `/usr/local/bin`
+```console 
+$ curl -L https://github.com/szyn/mog/releases/download/v0.1.3/mog_linux_amd64.tar.gz | tar zx -C /usr/local/bin
 ```
 
-Note:  
-Get the latest release of mog.   
-The script puts it with Go binaries at `/usr/local/bin`.   
-Also you can get binaries at https://github.com/szyn/mog/releases
+### macOS
 
-### docker
-We can also to use docker image.  
-See also https://hub.docker.com/r/szyn/mog
+You can use Homebrew:  
 
 ```console
-$ docker run --rm szyn/mog
+$ brew tap szyn/mog
+$ brew install mog
+```
+
+### Docker
+You can also to use docker image: 
+
+```console
+$ docker run --rm szyn/mog:v0.1.3
+```
+
+### go get
+...Or you can install via go get:
+
+```
+$ go get -u github.com/szyn/mog
 ```
 
 # Usage
