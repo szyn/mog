@@ -9,18 +9,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/franela/goreq"
-  packages = ["."]
-  revision = "b5b0f5eb2d16f20345cce0a544a75163579c0b00"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/hashicorp/errwrap"
-  packages = ["."]
-  revision = "7554cd9344cec97297fa6649b055a8c98c2a1e55"
-
-[[projects]]
-  branch = "master"
   name = "github.com/rendon/testcli"
   packages = ["."]
   revision = "6283090d169f51a2410b4e260341a01c9a4c0ca7"
@@ -28,8 +16,20 @@
 [[projects]]
   name = "github.com/satori/go.uuid"
   packages = ["."]
-  revision = "879c5887cd475cd7864858769793b2ceb0d44feb"
-  version = "v1.1.0"
+  revision = "f58768cc1a7a7e77a3bd49e98cdd21419399b6a3"
+  version = "v1.2.0"
+
+[[projects]]
+  name = "github.com/szyn/digdag-go-client"
+  packages = ["."]
+  revision = "e8e80672d352c4dcf245dfc8f502b1e350c5f6f3"
+  version = "v0.1.0"
+
+[[projects]]
+  name = "github.com/szyn/mog"
+  packages = ["logger"]
+  revision = "2c23c59de30826b7ff0cf1382941a5dec16ddb1e"
+  version = "v0.1.2"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -38,13 +38,14 @@
   version = "v1.20.0"
 
 [[projects]]
+  branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "9ccfe848b9db8435a24c424abbc07a921adf1df5"
+  revision = "af50095a40f9041b3b38960738837185c26e9419"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "62d76d5a5ef1653faf840e6aca2fb1abcb71e62ba55536768673091aa4094f0d"
+  inputs-digest = "e8bdfcb474fae83ecfe3b5be6ac805e3ca455325ae94601e6792bb30aaef8629"
   solver-name = "gps-cdcl"
   solver-version = 1
