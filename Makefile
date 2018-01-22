@@ -1,6 +1,6 @@
 NAME      := mog
 # for build
-VERSION   := v0.1.2
+VERSION   := v0.1.3
 REVISION  := $(shell git rev-parse --short HEAD)
 LDFLAGS   := -ldflags="-s -w -X \"main.Version=$(VERSION)\" -X \"main.Revision=$(REVISION)\""
 # for dist

@@ -1,6 +1,15 @@
 ## Change Log
 
-### v0.1.2 (2017/10/08 08:47 +00:00)
+### v0.1.3 (2018/01/22 14:21 +00:00)
+- [#17](https://github.com/szyn/mog/pull/17) Use digdag-go-client (@szyn)
+- [#16](https://github.com/szyn/mog/pull/16) Use Makefile for build and deploy (@szyn)
+- [#15](https://github.com/szyn/mog/pull/15) Update to CircleCI2 (@szyn)
+- [#14](https://github.com/szyn/mog/pull/14) Add Makefile (@szyn)
+- [#12](https://github.com/szyn/mog/pull/12) Dockerfile refactoring (#12) (@szyn)
+- [#11](https://github.com/szyn/mog/pull/11) Migrate from glide to dep (#11) (@szyn)
+- [#10](https://github.com/szyn/mog/pull/10) Update golang version to 1.9.2 (#10) (@szyn)
+
+### v0.1.2 (2017/10/08 09:09 +00:00)
 - [#8](https://github.com/szyn/mog/pull/8) Refactor lib (#8) (@szyn)
 - [#7](https://github.com/szyn/mog/pull/7) Update url from http to https (#7) (@ryysud)
 - [#6](https://github.com/szyn/mog/pull/6) Fix lib error handle (#6) (@szyn)

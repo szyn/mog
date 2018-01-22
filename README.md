@@ -48,7 +48,7 @@ USAGE:
    mog [global options] command [command options] [arguments...]
 
 VERSION:
-   v0.1.2
+   v0.1.3
 
 COMMANDS:
      status, s  Show a status of the task
