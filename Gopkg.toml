@@ -26,12 +26,6 @@
   version = "0.11.5"
 
 [[constraint]]
-  name = "github.com/franela/goreq"
-
-[[constraint]]
-  name = "github.com/hashicorp/errwrap"
-
-[[constraint]]
   name = "github.com/rendon/testcli"
 
 [[constraint]]
