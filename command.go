@@ -11,6 +11,7 @@ import (
 
 	digdag "github.com/szyn/digdag-go-client"
 	"github.com/szyn/mog/logger"
+	"github.com/szyn/mog/util"
 	"github.com/urfave/cli"
 )
 
@@ -107,6 +108,10 @@ func status(c *cli.Context) error {
 	client := newClientFromContext(c)
 	projectName := c.String("project")
 	workflowName := c.String("workflow")
+
+	err := util.SetLocation(client, projectName, workflowName)
+	logger.DieIf(err)
+
 	targetSession, err := convertSession(c.String("session"))
 	logger.DieIf(err)
 
@@ -159,6 +164,9 @@ func newAttempt(c *cli.Context) error {
 	var retry bool
 	retry = c.BoolT("retry")
 	logger.Log("retry: " + strconv.FormatBool(retry))
+
+	err = util.SetLocation(client, project.Name, workflow.Name)
+	logger.DieIf(err)
 
 	targetSession, err := convertSession(c.String("session"))
 	logger.DieIf(err)
@@ -216,6 +224,10 @@ func getResult(c *cli.Context) *digdag.Task {
 	timeout := time.After(time.Duration(maxTime) * time.Second)
 	projectName := c.String("project")
 	workflowName := c.String("workflow")
+
+	err := util.SetLocation(client, projectName, workflowName)
+	logger.DieIf(err)
+
 	targetSession, err := convertSession(c.String("session"))
 	logger.DieIf(err)
 
