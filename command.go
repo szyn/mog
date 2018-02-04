@@ -247,33 +247,38 @@ func getResult(c *cli.Context) *digdag.Task {
 
 func convertSession(session string) (string, error) {
 	var sessionTime string
-	s := regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]$`).Match([]byte(session))
-	if s == true {
-		session += "T00:00:00"
-	}
-	l := regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]T[0-9]{2}:[0-9]{2}:[0-9]{2}$`).Match([]byte(session))
-	if l == true {
-		session += time.Now().Format("-07:00")
-	}
-	r := regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]T[0-9]{2}:[0-9]{2}:[0-9]{2}(\+|-)[0-9]{2}:[0-9]{2}$`).Match([]byte(session))
-	if r == true {
-		inputSession, err := time.Parse(nowTimeFormat, session)
+
+	var daily = regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]$`)
+	var hourly = regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]T[0-9]{2}:[0-9]{2}:[0-9]{2}$`)
+	var now = regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]T[0-9]{2}:[0-9]{2}:[0-9]{2}(\+|-)[0-9]{2}:[0-9]{2}$`)
+
+	switch {
+	case daily.MatchString(session):
+		t, err := time.Parse("2006-01-02", session)
 		if err != nil {
 			return "", err
 		}
-		sessionTime = inputSession.Format(nowTimeFormat)
-		return sessionTime, nil
-	}
-
-	switch session {
-	case "daily":
+		sessionTime = t.Format(dailyTimeFormat)
+	case hourly.MatchString(session):
+		t, err := time.Parse("2006-01-02T15:00:00", session)
+		if err != nil {
+			return "", err
+		}
+		sessionTime = t.Format(hourlyTimeFormat)
+	case now.MatchString(session):
+		t, err := time.Parse(nowTimeFormat, session)
+		if err != nil {
+			return "", err
+		}
+		sessionTime = t.Format(nowTimeFormat)
+	case session == "daily":
 		sessionTime = time.Now().Format(dailyTimeFormat)
-	case "hourly":
+	case session == "hourly":
 		sessionTime = time.Now().Format(hourlyTimeFormat)
-	case "now":
+	case session == "now":
 		sessionTime = time.Now().Format(nowTimeFormat)
-	default: // default is dailyTimeFormat
-		sessionTime = time.Now().Format(dailyTimeFormat)
+	default:
+		return "", fmt.Errorf("Failed to parse input session")
 	}
 
 	return sessionTime, nil
