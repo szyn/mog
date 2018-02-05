@@ -10,7 +10,6 @@ import (
 	"strconv"
 
 	digdag "github.com/szyn/digdag-go-client"
-	"github.com/szyn/mog-kai/util"
 	"github.com/szyn/mog/logger"
 	"github.com/szyn/mog/util"
 	"github.com/urfave/cli"
