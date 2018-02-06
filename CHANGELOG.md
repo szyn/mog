@@ -1,6 +1,9 @@
 ## Change Log
 
-### v0.1.3 (2018/01/22 14:21 +00:00)
+### v0.1.4 (2018/02/06 16:26 +00:00)
+- [#19](https://github.com/szyn/mog/pull/19) Update location based on workflow's time zone (@szyn)
+
+### v0.1.3 (2018/01/22 14:27 +00:00)
 - [#17](https://github.com/szyn/mog/pull/17) Use digdag-go-client (@szyn)
 - [#16](https://github.com/szyn/mog/pull/16) Use Makefile for build and deploy (@szyn)
 - [#15](https://github.com/szyn/mog/pull/15) Update to CircleCI2 (@szyn)

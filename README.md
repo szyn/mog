@@ -23,7 +23,7 @@ You can download the binary from the [releases](https://github.com/szyn/mog/rele
 e.g. os: `linux`, arch: `amd64`  
 Download to `/usr/local/bin`
 ```console 
-$ curl -L https://github.com/szyn/mog/releases/download/v0.1.3/mog_linux_amd64.tar.gz | tar zx -C /usr/local/bin
+$ curl -L https://github.com/szyn/mog/releases/download/v0.1.4/mog_linux_amd64.tar.gz | tar zx -C /usr/local/bin
 ```
 
 ### macOS
@@ -39,7 +39,7 @@ $ brew install mog
 You can also to use docker image: 
 
 ```console
-$ docker run --rm szyn/mog:v0.1.3
+$ docker run --rm szyn/mog:v0.1.4
 ```
 
 ### go get
@@ -62,7 +62,7 @@ USAGE:
    mog [global options] command [command options] [arguments...]
 
 VERSION:
-   v0.1.3
+   v0.1.4
 
 COMMANDS:
      status, s  Show a status of the task
