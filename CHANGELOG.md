@@ -1,5 +1,8 @@
 ## Change Log
 
+### v0.1.5 (2018/02/12 14:09 +00:00)
+- [#20](https://github.com/szyn/mog/pull/20) Fix unexpected location (@szyn)
+
 ### v0.1.4 (2018/02/06 16:26 +00:00)
 - [#19](https://github.com/szyn/mog/pull/19) Update location based on workflow's time zone (@szyn)
 
