@@ -6,23 +6,22 @@ import (
 	digdag "github.com/szyn/digdag-go-client"
 )
 
-// SetLocation is to set timezone
-func SetLocation(c *digdag.Client, projectName, workflowName string) error {
+// FetchLocation is to set timezone
+func FetchLocation(c *digdag.Client, projectName, workflowName string) (*time.Location, error) {
 	project, err := c.GetProject(projectName)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	workflow, err := c.GetWorkflow(project.ID, workflowName)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	loc, err := time.LoadLocation(workflow.Timezone)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	time.Local = loc
-	return nil
+	return loc, nil
 }
