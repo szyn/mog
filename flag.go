@@ -6,6 +6,10 @@ import (
 	"github.com/urfave/cli"
 )
 
+const (
+	dayTimeFormat = "2006-01-02"
+)
+
 var commonFlag = []cli.Flag{
 	cli.StringFlag{
 		Name:  "project, p",
@@ -18,7 +22,7 @@ var commonFlag = []cli.Flag{
 	},
 	cli.StringFlag{
 		Name:  "session, s",
-		Value: time.Now().Format(dailyTimeFormat),
+		Value: time.Now().Format(dayTimeFormat),
 		Usage: "set session_time to this time",
 	},
 }

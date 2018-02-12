@@ -109,10 +109,10 @@ func status(c *cli.Context) error {
 	projectName := c.String("project")
 	workflowName := c.String("workflow")
 
-	err := util.SetLocation(client, projectName, workflowName)
+	loc, err := util.FetchLocation(client, projectName, workflowName)
 	logger.DieIf(err)
 
-	targetSession, err := convertSession(c.String("session"))
+	targetSession, err := convertSession(c.String("session"), loc)
 	logger.DieIf(err)
 
 	task := c.Args().Get(0)
@@ -165,10 +165,10 @@ func newAttempt(c *cli.Context) error {
 	retry = c.BoolT("retry")
 	logger.Log("retry: " + strconv.FormatBool(retry))
 
-	err = util.SetLocation(client, project.Name, workflow.Name)
+	loc, err := util.FetchLocation(client, project.Name, workflow.Name)
 	logger.DieIf(err)
 
-	targetSession, err := convertSession(c.String("session"))
+	targetSession, err := convertSession(c.String("session"), loc)
 	logger.DieIf(err)
 
 	result, done, err := client.CreateNewAttempt(workflow.ID, targetSession, []string{}, retry)
@@ -225,10 +225,10 @@ func getResult(c *cli.Context) *digdag.Task {
 	projectName := c.String("project")
 	workflowName := c.String("workflow")
 
-	err := util.SetLocation(client, projectName, workflowName)
+	loc, err := util.FetchLocation(client, projectName, workflowName)
 	logger.DieIf(err)
 
-	targetSession, err := convertSession(c.String("session"))
+	targetSession, err := convertSession(c.String("session"), loc)
 	logger.DieIf(err)
 
 	for {
@@ -257,7 +257,7 @@ func getResult(c *cli.Context) *digdag.Task {
 	}
 }
 
-func convertSession(session string) (string, error) {
+func convertSession(session string, loc *time.Location) (string, error) {
 	var sessionTime string
 
 	var daily = regexp.MustCompile(`^[0-9]{4}-[01][0-9]-[0-3][0-9]$`)
@@ -266,19 +266,19 @@ func convertSession(session string) (string, error) {
 
 	switch {
 	case daily.MatchString(session):
-		t, err := time.Parse("2006-01-02", session)
+		t, err := time.ParseInLocation("2006-01-02", session, loc)
 		if err != nil {
 			return "", err
 		}
 		sessionTime = t.Format(dailyTimeFormat)
 	case hourly.MatchString(session):
-		t, err := time.Parse("2006-01-02T15:00:00", session)
+		t, err := time.ParseInLocation("2006-01-02T15:00:00", session, loc)
 		if err != nil {
 			return "", err
 		}
 		sessionTime = t.Format(hourlyTimeFormat)
 	case now.MatchString(session):
-		t, err := time.Parse(nowTimeFormat, session)
+		t, err := time.ParseInLocation(nowTimeFormat, session, loc)
 		if err != nil {
 			return "", err
 		}
