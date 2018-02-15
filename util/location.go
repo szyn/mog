@@ -23,5 +23,8 @@ func FetchLocation(c *digdag.Client, projectName, workflowName string) (*time.Lo
 		return nil, err
 	}
 
+	// Set workflow's timezone
+	time.Local = loc
+
 	return loc, nil
 }

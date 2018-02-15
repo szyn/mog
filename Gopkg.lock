@@ -112,8 +112,8 @@
 [[projects]]
   name = "github.com/szyn/digdag-go-client"
   packages = ["."]
-  revision = "e8e80672d352c4dcf245dfc8f502b1e350c5f6f3"
-  version = "v0.1.0"
+  revision = "537e2b0fc8eef1fceecd69d407400c3f92561e2b"
+  version = "v0.1.1"
 
 [[projects]]
   name = "github.com/urfave/cli"
@@ -142,6 +142,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e87af0cac7ba219d0540889303f9275e0645fd87ab05ccc17a51f10d336fee10"
+  inputs-digest = "7f3038469fea92d096cc6377921e6d3f90c27b3e4e175bfa2e3e24ec87ad2bc7"
   solver-name = "gps-cdcl"
   solver-version = 1

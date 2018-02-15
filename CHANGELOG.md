@@ -1,5 +1,8 @@
 ## Change Log
 
+### v0.1.6 (2018/02/13 14:04 +00:00)
+- [#21](https://github.com/szyn/mog/pull/21) Update digdag-go-client (@szyn)
+
 ### v0.1.5 (2018/02/12 14:09 +00:00)
 - [#20](https://github.com/szyn/mog/pull/20) Fix unexpected location (@szyn)
 
